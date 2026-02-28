@@ -29,12 +29,19 @@ type PostCardProps = {
   // → 削除処理を親から受け取る
   formatDate?: (dateString: string) => string;
   // → 日付フォーマット関数を親から受け取る
+
+  // --- Day3 追加 ここから ---
+  onLike?: (id: number, isLiked: boolean) => void;
+  isAnimating?: boolean;
+  // --- Day3 追加 ここまで ---
 };
 
 export default function PostCard({
   post,
   onDelete,
   formatDate,
+  onLike, // Day3 追加
+  isAnimating = false, // Day3 追加
 }: PostCardProps) {
   // デフォルトの日付フォーマット
   const defaultFormatDate = (dateString: string) => {
@@ -82,7 +89,7 @@ export default function PostCard({
 
       {/* 画像 */}
       {post.imageUrl && (
-        <div className="rounded-xl overflow-hidden">
+        <div className="mb-4 rounded-xl overflow-hidden">
           <img
             src={post.imageUrl}
             alt=""
@@ -90,6 +97,21 @@ export default function PostCard({
           />
         </div>
       )}
+
+      {/* --- Day3 追加 ここから --- */}
+      {/* アクション（いいねボタン） */}
+      <div className="flex items-center gap-6 pt-3 border-t border-white/10">
+        <button
+          onClick={() => onLike?.(post.id, post.isLiked)}
+          className={`flex items-center gap-2 transition-all ${
+            post.isLiked ? "text-pink-500" : "text-white/50 hover:text-pink-500"
+          } ${isAnimating ? "heart-animation" : ""}`}
+        >
+          <span className="text-xl">{post.isLiked ? "❤️" : "🤍"}</span>
+          <span className="font-medium">{post.likeCount}</span>
+        </button>
+      </div>
+      {/* --- Day3 追加 ここまで --- */}
     </article>
   );
 }
